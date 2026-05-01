@@ -1,3 +1,5 @@
+use StudentManagement;
+
 CREATE TABLE UserAccount (
     user_ID INT PRIMARY KEY,
     username VARCHAR(50) UNIQUE,
@@ -9,4 +11,6 @@ CREATE TABLE UserAccount (
     created_at DATETIME,
     dept_ID INT,
     FOREIGN KEY (dept_ID) REFERENCES Department(dept_ID)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 );

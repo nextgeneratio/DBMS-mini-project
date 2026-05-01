@@ -1,3 +1,5 @@
+use StudentManagement;
+
 CREATE TABLE Student (
     Std_Reg VARCHAR(20) PRIMARY KEY,
     Name VARCHAR(100),
@@ -11,4 +13,6 @@ CREATE TABLE Student (
     email VARCHAR(100),
     dept_ID INT,
     FOREIGN KEY (dept_ID) REFERENCES Department(dept_ID)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 );
