@@ -1,0 +1,195 @@
+ICT1222 - Database Management Systems Practicum
+
+Mini Project
+
+UNIVERSITY OF RUHUNA
+BACHELOR OF INFORMATION AND COMMUNICATION
+TECHNOLOGY DEGREE
+LEVEL I (SEMESTER II) – Mini Project
+Course unit: ICT1222 - Database Management Systems Practicum
+
+Duration: Up to 13 week
+
+You are required to develop a system for faculty of technology for managing students details, student
+marks, student attendance and result management.
+·
+
+Your system should contain below MYSQL users accounts
+Admin - With All privileges with Grant Option for all the tables in the database
+Dean
+
+- With All privileges without Grant for all the tables in the database
+
+Lecturer – All privileges without Grant and user creation for all the tables in the database
+Technical Officer - Read, write and update permissions for attendance related tables/views
+Student - Read permission for final attendance and final marks/Grades tables/views
+·
+
+·
+·
+·
+
+·
+
+·
+
+·
+
+Your system should include tables to store all kind of exam marks
+o Ex: Quiz marks, Assessment Marks, Mid Semester marks(Practical and Theory), Final
+Marks(Practical and Theory) etc.
+Your system should include table/s to store data about course units
+o Including course code, name, credits , theory/practical, lecturer in charge etc.
+Your system should include tables to store data about all the users mentioned above
+o You need to have one admin, one dean, many lecturers, many TOs and many students.
+You need to go through the DDLC process and produce all the related documents for the final
+presentation (Data Requirement document, ER diagrams, Relational Mapping diagram etc)
+
+You should store data for at least 10 proper students, at least 05 repeat students, at least 05
+lecturers, at least 05 technical officers and sufficient data for other mentioned roles
+o You should store basic data for above roles including at least 06 different attributes.
+You need to store the details about course units according to the timetable of Level 01 Semester
+02 for department of ICT (Offered by all the departments)
+Attendance Related requirements
+You must record attendance details as given below
+Page 1 of 4
+
+ICT1222 - Database Management Systems Practicum
+o
+o
+o
+o
+o
+
+o
+
+o
+
+·
+
+·
+·
+
+·
+·
+
+·
+
+Mini Project
+
+for all the subjects in the timetable of Level 01 Semester 02
+assuming semester is planned for 15 weeks
+Assume that theory and practical both have 15 sessions
+ You must consider the time allocation when calculating the percentages
+If some students have submitted a medical for a day there should be a way to record it
+In attendance recording tables there should be data
+ to cover >= 80% students
+ < 80% students
+ with medical >= 80% students
+ with medical < 80% students
+There should be a way to view attendance details
+ as a summary for whole batch
+· by giving the course code
+o with registration nos, dates, percentage, and eligibility
+ percentage >= 80 à eligible
+· for all the subjects with percentage and eligibility
+ as individuals by giving the registration no
+· as a summery for all the course units
+ as individuals by giving the registration no and course code
+When there is both theory and practical for a subject there should be a way to check
+attendance only for theory, only for practical and as combined
+
+Marks Related requirements
+You should record marks for the course units according to the Assessment criteria given by each
+course unit
+o All marks must be out of 100
+For eligibility requirements for CA please use criteria related to UGC Commission Circular No. 122024
+There should be a way to view CA marks details
+o As a summary for whole batch
+ By giving course code
+o As individuals
+ By giving course code and registration no
+ By giving registration no as a summery
+There should be a way to see the final marks only for individuals and whole batch
+There should be a way to see if student/s are eligible according to the criteria of CA to sit for the
+final exam
+Eligibility requirements
+There should be a way to check eligibility (attendance + CA marks) as individuals and for the
+whole batch
+Page 2 of 4
+
+ICT1222 - Database Management Systems Practicum
+
+·
+·
+·
+·
+
+Mini Project
+
+Other requirements
+Grade students according to the UGC Commission Circular No. 12-2024
+There should be a way to see marks for each subject, student and as a whole batch
+There should be a way to see Grades for each subject, student and as a whole batch
+There should be a way to see SGPA and CGPA with the subjects and grades for each student and
+for the whole batch
+
+Note: 1. You need to follow the guidelines of UGC Commission Circular No. 12-2024 and must meet
+all the requirements specified in the circular through your solution
+2. If there are students who put medicals for CA, Mid exams or Final exams you must display
+their result as MC
+3. In student table there should be a field to identify the status of the students (proper, repeat
+and suspended). If a student is having suspended status, you must display all results of that
+student as WH and if a student is having repeat status maximum that they can get is a “C”.
+
+Guidelines for Final Report Submission
+Your report must contain
+- Brief introduction about the problem/group project
+- Brief introduction to the solution
+- Proposed ER/EER diagram
+- Proposed Relational mapping diagram
+- Table structure of your solution
+- Architecture of your solution
+- Tools and technologies that you have used
+- Security measures that you have taken to protect your DB
+- Brief description about DB Accounts/Users and the reasons for creating
+such Accounts/Users
+- Code snippets to support your work
+* Stored procedures
+* views etc
+(you must cover at least the concepts that we have discussed in DBMS practicum
+module)
+- Problems that you faced during the development of the solution
+- Solutions/how you have overcome the above identified problems
+- If you are going to host your backend, where are you going to host it and reasons for the
+selection
+- If you are going to host your backend in a cloud environment what are the things/changes
+that you must do in your backend
+- Individual contribution to the backend development
+- References
+
+Page 3 of 4
+
+ICT1222 - Database Management Systems Practicum
+
+Mini Project
+
+Department of Information and Communication Technology
+Faculty of Technology
+University of Ruhuna
+
+Database Management Systems Practicum
+ICT 1222
+Assignment 01 – Mini Project
+Group <no>
+
+Submitted to:
+
+[name of the course coordinator]
+Submitted by:
+
+Page 4 of 4
+
+<Index no> - <Name>
+
+
