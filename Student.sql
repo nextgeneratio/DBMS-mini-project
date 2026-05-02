@@ -10,7 +10,7 @@ CREATE TABLE Student (
     Gender VARCHAR(10),
     DOB DATE,
     address TEXT,
-    email VARCHAR(100),
+    email VARCHAR(100) UNIQUE,
     dept_ID INT,
     FOREIGN KEY (dept_ID) REFERENCES Department(dept_ID)
     ON DELETE CASCADE

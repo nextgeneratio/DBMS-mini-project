@@ -1,4 +1,4 @@
 INSERT INTO Admin (user_ID) VALUES
-(1),
-(4)
+('UA001'),
+('UA004')
 ;

@@ -1,5 +1,5 @@
 INSERT INTO LecturesDesignation (user_ID, Designation) VALUES
-(2, 'Senior Lecturer'),
-(5, 'Assistant Lecturer'),
-(8, 'Lecturer'),
-(9, 'Head of Department');
+('UA002', 'Senior Lecturer'),
+('UA005', 'Assistant Lecturer'),
+('UA008', 'Lecturer'),
+('UA009', 'Head of Department');

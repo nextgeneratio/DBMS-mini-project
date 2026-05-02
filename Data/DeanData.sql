@@ -1,3 +1,3 @@
 INSERT INTO Dean (user_ID) VALUES
-(7)
+('UA007')
 ;
