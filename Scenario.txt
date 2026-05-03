@@ -8,7 +8,7 @@ TECHNOLOGY DEGREE
 LEVEL I (SEMESTER II) – Mini Project
 Course unit: ICT1222 - Database Management Systems Practicum
 
-Duration: Up to 13 week
+Duration: Up to 15 weeks (course duration = credit x 15 hours)
 
 You are required to develop a system for faculty of technology for managing students details, student
 marks, student attendance and result management.

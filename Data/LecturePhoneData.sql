@@ -1,4 +1,6 @@
 INSERT INTO LecturesPhone (user_ID, Phone) VALUES
 ('UA002', '0712345678'),
 ('UA005', '0759876543')
+,
+('UA011', '0775555555')
 ;
