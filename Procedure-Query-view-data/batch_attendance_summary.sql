@@ -8,12 +8,12 @@ BEGIN
     SELECT
         t.Course_ID,
         COUNT(*) AS total_students,
-        SUM(CASE WHEN (hours_present / NULLIF(no_of_hours,0) * 100) >= 80 THEN 1 ELSE 0 END) AS count_ge_80,
-        SUM(CASE WHEN (hours_present / NULLIF(no_of_hours,0) * 100) < 80 THEN 1 ELSE 0 END) AS count_lt_80,
-        SUM(CASE WHEN (hours_med_adj / NULLIF(no_of_hours,0) * 100) >= 80 THEN 1 ELSE 0 END) AS count_medical_adjusted_ge_80,
-        SUM(CASE WHEN (hours_med_adj / NULLIF(no_of_hours,0) * 100) < 80 THEN 1 ELSE 0 END) AS count_medical_adjusted_lt_80,
-        ROUND(AVG(hours_present / NULLIF(no_of_hours,0) * 100),2) AS avg_percentage,
-        ROUND(AVG(hours_med_adj / NULLIF(no_of_hours,0) * 100),2) AS avg_medical_adjusted_percentage
+        SUM(CASE WHEN (t.hours_present / NULLIF(t.no_of_hours,0) * 100) >= 80 THEN 1 ELSE 0 END) AS count_ge_80,
+        SUM(CASE WHEN (t.hours_present / NULLIF(t.no_of_hours,0) * 100) < 80 THEN 1 ELSE 0 END) AS count_lt_80,
+        SUM(CASE WHEN (t.hours_med_adj / NULLIF(t.no_of_hours,0) * 100) >= 80 THEN 1 ELSE 0 END) AS count_medical_adjusted_ge_80,
+        SUM(CASE WHEN (t.hours_med_adj / NULLIF(t.no_of_hours,0) * 100) < 80 THEN 1 ELSE 0 END) AS count_medical_adjusted_lt_80,
+        ROUND(AVG(t.hours_present / NULLIF(t.no_of_hours,0) * 100),2) AS avg_percentage,
+        ROUND(AVG(t.hours_med_adj / NULLIF(t.no_of_hours,0) * 100),2) AS avg_medical_adjusted_percentage
     FROM (
         SELECT sc.Course_ID,
                sc.Std_Reg,

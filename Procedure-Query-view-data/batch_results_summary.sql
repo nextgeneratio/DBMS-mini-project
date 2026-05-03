@@ -100,7 +100,8 @@ BEGIN
     FROM tmp_sgpa
     JOIN tmp_cgpa USING (Std_Reg)
     JOIN StudentCourse sc ON sc.Std_Reg = tmp_sgpa.Std_Reg
-    WHERE (in_course_id IS NULL OR in_course_id = '' OR sc.Course_ID = in_course_id);
+    WHERE (in_course_id IS NULL OR in_course_id = '' OR sc.Course_ID = in_course_id)
+    GROUP BY in_course_id;
 
 END$$
 DELIMITER ;

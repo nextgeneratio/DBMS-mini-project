@@ -1,8 +1,17 @@
--- Dynamic procedures to assign and revoke role-based privileges
--- These procedures construct GRANT/REVOKE statements and execute them via prepared statements.
--- Must be run by a MySQL account with sufficient privilege to GRANT/REVOKE (e.g., root)
+-- Dynamic procedures to assign and revoke role-based privileges.
+-- These procedures build one SQL statement at a time and execute it using prepared statements.
+-- Must be run by a MySQL account with sufficient privilege to GRANT/REVOKE (e.g., root).
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS sp_exec_sql$$
+CREATE PROCEDURE sp_exec_sql(IN in_sql LONGTEXT)
+BEGIN
+    SET @sql_text = in_sql;
+    PREPARE stmt FROM @sql_text;
+    EXECUTE stmt;
+    DEALLOCATE PREPARE stmt;
+END$$
+
 DROP PROCEDURE IF EXISTS sp_assign_role$$
 CREATE PROCEDURE sp_assign_role(
     IN in_role VARCHAR(50),
@@ -11,30 +20,28 @@ CREATE PROCEDURE sp_assign_role(
     IN in_db_name VARCHAR(100)
 )
 BEGIN
-    DECLARE stm TEXT;
-    SET @user = CONCAT("'", REPLACE(in_db_user, "'", "''"), "'@'", REPLACE(in_db_host, "'", "''"), "'");
+    DECLARE user_ref VARCHAR(255);
+    DECLARE grant_sql LONGTEXT;
 
-    CASE LOWER(in_role)
-        WHEN 'admin' THEN
-            SET stm = CONCAT('GRANT ALL PRIVILEGES ON ', in_db_name, '.* TO ', @user, ' WITH GRANT OPTION');
-        WHEN 'dean' THEN
-            SET stm = CONCAT('GRANT ALL PRIVILEGES ON ', in_db_name, '.* TO ', @user);
-        WHEN 'lecturer' THEN
-            SET stm = CONCAT('GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, EXECUTE ON ', in_db_name, '.* TO ', @user);
-        WHEN 'technical_officer' THEN
-            SET stm = CONCAT('GRANT SELECT, INSERT, UPDATE, DELETE ON ', in_db_name, '.Attendance TO ', @user);
-        WHEN 'student' THEN
-            SET stm = CONCAT('GRANT SELECT ON ', in_db_name, '.Final_Marks TO ', @user, '; GRANT SELECT ON ', in_db_name, '.Attendance TO ', @user);
-        ELSE
-            SET stm = CONCAT('-- Unknown role: ', in_role);
-    END CASE;
+    SET user_ref = CONCAT("'", REPLACE(in_db_user, "'", "''"), "'@'", REPLACE(in_db_host, "'", "''"), "'");
 
-    IF LEFT(stm,2) <> '--' THEN
-        PREPARE ps FROM stm;
-        EXECUTE ps;
-        DEALLOCATE PREPARE ps;
+    IF LOWER(in_role) = 'student' THEN
+        CALL sp_exec_sql(CONCAT('GRANT SELECT ON ', in_db_name, '.Final_Marks TO ', user_ref));
+        CALL sp_exec_sql(CONCAT('GRANT SELECT ON ', in_db_name, '.Attendance TO ', user_ref));
+    ELSEIF LOWER(in_role) = 'admin' THEN
+        SET grant_sql = CONCAT('GRANT ALL PRIVILEGES ON ', in_db_name, '.* TO ', user_ref, ' WITH GRANT OPTION');
+        CALL sp_exec_sql(grant_sql);
+    ELSEIF LOWER(in_role) = 'dean' THEN
+        SET grant_sql = CONCAT('GRANT ALL PRIVILEGES ON ', in_db_name, '.* TO ', user_ref);
+        CALL sp_exec_sql(grant_sql);
+    ELSEIF LOWER(in_role) = 'lecturer' THEN
+        SET grant_sql = CONCAT('GRANT ALL PRIVILEGES ON ', in_db_name, '.* TO ', user_ref);
+        CALL sp_exec_sql(grant_sql);
+    ELSEIF LOWER(in_role) = 'technical_officer' THEN
+        SET grant_sql = CONCAT('GRANT SELECT, INSERT, UPDATE ON ', in_db_name, '.Attendance TO ', user_ref);
+        CALL sp_exec_sql(grant_sql);
     ELSE
-        SELECT stm AS message;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Unknown role';
     END IF;
 END$$
 
@@ -46,30 +53,28 @@ CREATE PROCEDURE sp_revoke_role(
     IN in_db_name VARCHAR(100)
 )
 BEGIN
-    DECLARE stm TEXT;
-    SET @user = CONCAT("'", REPLACE(in_db_user, "'", "''"), "'@'", REPLACE(in_db_host, "'", "''"), "'");
+    DECLARE user_ref VARCHAR(255);
+    DECLARE revoke_sql LONGTEXT;
 
-    CASE LOWER(in_role)
-        WHEN 'admin' THEN
-            SET stm = CONCAT('REVOKE ALL PRIVILEGES, GRANT OPTION FROM ', @user);
-        WHEN 'dean' THEN
-            SET stm = CONCAT('REVOKE ALL PRIVILEGES FROM ', @user);
-        WHEN 'lecturer' THEN
-            SET stm = CONCAT('REVOKE SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, EXECUTE ON ', in_db_name, '.* FROM ', @user);
-        WHEN 'technical_officer' THEN
-            SET stm = CONCAT('REVOKE SELECT, INSERT, UPDATE, DELETE ON ', in_db_name, '.Attendance FROM ', @user);
-        WHEN 'student' THEN
-            SET stm = CONCAT('REVOKE SELECT ON ', in_db_name, '.Final_Marks FROM ', @user, '; REVOKE SELECT ON ', in_db_name, '.Attendance FROM ', @user);
-        ELSE
-            SET stm = CONCAT('-- Unknown role: ', in_role);
-    END CASE;
+    SET user_ref = CONCAT("'", REPLACE(in_db_user, "'", "''"), "'@'", REPLACE(in_db_host, "'", "''"), "'");
 
-    IF LEFT(stm,2) <> '--' THEN
-        PREPARE ps FROM stm;
-        EXECUTE ps;
-        DEALLOCATE PREPARE ps;
+    IF LOWER(in_role) = 'student' THEN
+        CALL sp_exec_sql(CONCAT('REVOKE SELECT ON ', in_db_name, '.Final_Marks FROM ', user_ref));
+        CALL sp_exec_sql(CONCAT('REVOKE SELECT ON ', in_db_name, '.Attendance FROM ', user_ref));
+    ELSEIF LOWER(in_role) = 'admin' THEN
+        SET revoke_sql = CONCAT('REVOKE ALL PRIVILEGES, GRANT OPTION FROM ', user_ref);
+        CALL sp_exec_sql(revoke_sql);
+    ELSEIF LOWER(in_role) = 'dean' THEN
+        SET revoke_sql = CONCAT('REVOKE ALL PRIVILEGES FROM ', user_ref);
+        CALL sp_exec_sql(revoke_sql);
+    ELSEIF LOWER(in_role) = 'lecturer' THEN
+        SET revoke_sql = CONCAT('REVOKE ALL PRIVILEGES ON ', in_db_name, '.* FROM ', user_ref);
+        CALL sp_exec_sql(revoke_sql);
+    ELSEIF LOWER(in_role) = 'technical_officer' THEN
+        SET revoke_sql = CONCAT('REVOKE SELECT, INSERT, UPDATE ON ', in_db_name, '.Attendance FROM ', user_ref);
+        CALL sp_exec_sql(revoke_sql);
     ELSE
-        SELECT stm AS message;
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Unknown role';
     END IF;
 END$$
 
@@ -78,4 +83,4 @@ DELIMITER ;
 -- Safety notes:
 -- 1) Procedures use simple string concatenation. Ensure input values are trusted or sanitized.
 -- 2) To remove a user's account entirely, use DROP USER (requires higher privileges).
--- 3) After GRANT/REVOKE, consider running FLUSH PRIVILEGES if needed (MySQL usually applies GRANT immediately).
+-- 3) After GRANT/REVOKE, MySQL applies changes immediately; FLUSH PRIVILEGES is usually not needed for GRANT/REVOKE.

@@ -4,8 +4,11 @@
 --  IN in_course_id: optional course id filter (NULL = all courses)
 --  IN in_mode: 'theory', 'practical', or 'combined' (default 'combined')
 -- Assumptions: uses Course.Type to filter theory/practical
+
 DELIMITER $$
+
 DROP PROCEDURE IF EXISTS sp_attendance_individual$$
+
 CREATE PROCEDURE sp_attendance_individual(
     IN in_std_reg VARCHAR(20),
     IN in_course_id VARCHAR(20),
@@ -33,4 +36,5 @@ BEGIN
           )
     GROUP BY c.Course_ID, c.Name, c.Type, c.No_of_hours;
 END$$
+
 DELIMITER ;

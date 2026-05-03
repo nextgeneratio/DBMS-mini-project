@@ -7,8 +7,8 @@ BEGIN
     SELECT
         s.Std_Reg,
         s.Name,
-        COALESCE(SUM(CASE WHEN LOWER(sc.std_type) IN ('assignment','assign','assignment%','quiz','mid-term','midterm','mid term','mid term') AND sc.Course_ID = in_course_id THEN sc.Marks END),0) AS CA_Total,
-        CASE WHEN COALESCE(SUM(CASE WHEN LOWER(sc.std_type) IN ('assignment','quiz','mid-term','midterm') AND sc.Course_ID = in_course_id THEN sc.Marks END),0) >= 35
+        COALESCE(SUM(CASE WHEN LOWER(sc.std_type) IN ('assignment','quiz','mid-term','midterm') THEN sc.Marks ELSE 0 END),0) AS CA_Total,
+        CASE WHEN COALESCE(SUM(CASE WHEN LOWER(sc.std_type) IN ('assignment','quiz','mid-term','midterm') THEN sc.Marks ELSE 0 END),0) >= 35
              THEN 'Eligible' ELSE 'Not Eligible' END AS ca_eligibility
     FROM Student s
     JOIN StudentCourse stc ON s.Std_Reg = stc.Std_Reg AND stc.Course_ID = in_course_id

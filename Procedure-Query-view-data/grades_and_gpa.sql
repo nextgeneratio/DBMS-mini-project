@@ -65,23 +65,18 @@ BEGIN
     SELECT
         in_std_reg AS Std_Reg,
         in_semester AS Semester,
-        ROUND(SUM(final_gp * c.Credit) / NULLIF(SUM(c.Credit),0),3) AS SGPA
-    FROM (
-        SELECT fm.Course_ID, fm.Total_Marks,
-            CASE
-                WHEN sc.is_repeat = TRUE AND fm.Total_Marks >= 60 THEN 2.0
-                WHEN fm.Total_Marks >= 70 THEN 4.0
-                WHEN fm.Total_Marks >= 60 THEN 3.0
-                WHEN fm.Total_Marks >= 50 THEN 2.0
-                WHEN fm.Total_Marks >= 40 THEN 1.0
-                ELSE 0.0
-            END AS final_gp
-        FROM Final_Marks fm
-        JOIN Course c ON c.Course_ID = fm.Course_ID
-        LEFT JOIN StudentCourse sc ON sc.Std_Reg = fm.Std_Reg AND sc.Course_ID = fm.Course_ID
-        WHERE fm.Std_Reg = in_std_reg AND c.Semester = in_semester
-    ) g
-    JOIN Course c ON c.Course_ID = g.Course_ID
+        ROUND(SUM(CASE
+            WHEN sc.is_repeat = TRUE AND fm.Total_Marks >= 60 THEN 2.0 * c.Credit
+            WHEN fm.Total_Marks >= 70 THEN 4.0 * c.Credit
+            WHEN fm.Total_Marks >= 60 THEN 3.0 * c.Credit
+            WHEN fm.Total_Marks >= 50 THEN 2.0 * c.Credit
+            WHEN fm.Total_Marks >= 40 THEN 1.0 * c.Credit
+            ELSE 0.0
+        END) / NULLIF(SUM(c.Credit),0),3) AS SGPA
+    FROM Final_Marks fm
+    JOIN Course c ON c.Course_ID = fm.Course_ID
+    LEFT JOIN StudentCourse sc ON sc.Std_Reg = fm.Std_Reg AND sc.Course_ID = fm.Course_ID
+    WHERE fm.Std_Reg = in_std_reg AND c.Semester = in_semester
     GROUP BY in_std_reg, in_semester;
 END$$
 
@@ -90,22 +85,18 @@ CREATE PROCEDURE sp_compute_cgpa(IN in_std_reg VARCHAR(20))
 BEGIN
     SELECT
         in_std_reg AS Std_Reg,
-        ROUND(SUM(final_gp * c.Credit) / NULLIF(SUM(c.Credit),0),3) AS CGPA
-    FROM (
-        SELECT fm.Course_ID, fm.Total_Marks,
-            CASE
-                WHEN sc.is_repeat = TRUE AND fm.Total_Marks >= 60 THEN 2.0
-                WHEN fm.Total_Marks >= 70 THEN 4.0
-                WHEN fm.Total_Marks >= 60 THEN 3.0
-                WHEN fm.Total_Marks >= 50 THEN 2.0
-                WHEN fm.Total_Marks >= 40 THEN 1.0
-                ELSE 0.0
-            END AS final_gp
-        FROM Final_Marks fm
-        LEFT JOIN StudentCourse sc ON sc.Std_Reg = fm.Std_Reg AND sc.Course_ID = fm.Course_ID
-        WHERE fm.Std_Reg = in_std_reg
-    ) g
-    JOIN Course c ON c.Course_ID = g.Course_ID
+        ROUND(SUM(CASE
+            WHEN sc.is_repeat = TRUE AND fm.Total_Marks >= 60 THEN 2.0 * c.Credit
+            WHEN fm.Total_Marks >= 70 THEN 4.0 * c.Credit
+            WHEN fm.Total_Marks >= 60 THEN 3.0 * c.Credit
+            WHEN fm.Total_Marks >= 50 THEN 2.0 * c.Credit
+            WHEN fm.Total_Marks >= 40 THEN 1.0 * c.Credit
+            ELSE 0.0
+        END) / NULLIF(SUM(c.Credit),0),3) AS CGPA
+    FROM Final_Marks fm
+    JOIN Course c ON c.Course_ID = fm.Course_ID
+    LEFT JOIN StudentCourse sc ON sc.Std_Reg = fm.Std_Reg AND sc.Course_ID = fm.Course_ID
+    WHERE fm.Std_Reg = in_std_reg
     GROUP BY in_std_reg;
 END$$
 DELIMITER ;
